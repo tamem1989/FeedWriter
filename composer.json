@@ -1,5 +1,5 @@
 {
-    "name": "feed/feedwriter",
+    "name": "feedwriter/feedwriter",
     "description": "Generate feeds in either RSS 1.0, RSS 2.0 or ATOM formats",
     "keywords": ["RSS", "RSS 1.0", "RSS 2.0", "RSS2", "ATOM", "feed"],
     "homepage": "https://github.com/mibe/FeedWriter",

@@ -22,7 +22,7 @@ use \DateTime;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+ 
 /**
  * Universal Feed Writer
  *
@@ -169,8 +169,6 @@ class Item
         return $this->version;
     }
 
-    // Wrapper functions ------------------------------------------------------
-
     /**
     * Set the 'description' element of feed item
     *
@@ -267,7 +265,7 @@ class Item
             $this->addElement('link', $link);
         } else {
             $this->addElement('link','',array('href'=>$link));
-            $this->setId(Feed::uuid($link,'urn:uuid:'));
+            //$this->setId(Feed::uuid($link,'urn:uuid:'));
         }
 
         return $this;
@@ -393,12 +391,12 @@ class Item
             $found = FALSE;
             $checkId = strtolower($id);
 
-            foreach($validSchemes as $scheme)
-                if (strrpos($checkId, $scheme . ':', -strlen($checkId)) !== FALSE)
-                {
-                    $found = TRUE;
+            foreach($validSchemes as $scheme) {
+                if (strrpos($checkId, $scheme . ':', -strlen($checkId)) !== false) {
+                    $found = true;
                     break;
                 }
+            }
 
             if (!$found)
                 throw new \InvalidArgumentException("The ID must begin with an IANA-registered URI scheme.");

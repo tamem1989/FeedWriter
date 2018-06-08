@@ -88,7 +88,7 @@ abstract class Feed
         $this->version = $version;
 
         // Setting default encoding
-        $this->encoding = 'utf-8';
+        $this->encoding = 'UTF-8';
 
         // Setting default value for essential channel element
         $this->setTitle($version . ' Feed');
@@ -105,8 +105,6 @@ abstract class Feed
         // Tag names to encode in CDATA
         $this->addCDATAEncoding(array('description', 'content:encoded', 'summary'));
     }
-
-    // Start # public functions ---------------------------------------------
 
     /**
     * Set the URLs for feed pagination.
@@ -357,9 +355,9 @@ abstract class Feed
     */
     public function addItem(Item $feedItem)
     {
-        if ($feedItem->getVersion() != $this->version)
-        {
-            $msg = sprintf('Feed type mismatch: This instance can handle %s feeds only, but item for %s feeds given.', $this->version, $feedItem->getVersion());
+        if ($feedItem->getVersion() != $this->version) {
+            $msg = sprintf('Feed type mismatch: This instance can handle %s feeds only, but item for %s feeds given.',
+                $this->version, $feedItem->getVersion());
             throw new \InvalidArgumentException($msg);
         }
 
@@ -367,8 +365,6 @@ abstract class Feed
 
         return $this;
     }
-
-    // Wrapper functions -------------------------------------------------------------------
 
     /**
     * Set the 'encoding' attribute in the XML prolog.
@@ -388,6 +384,18 @@ abstract class Feed
         $this->encoding = $encoding;
 
         return $this;
+    }
+
+    /**
+     * Set the 'uid' channel element
+     *
+     * @access   public
+     * @param    string $title value of 'id' channel tag
+     * @return   self
+     */
+    public function setUniqueId($uid)
+    {
+        return $this->setChannelElement('id', $uid);
     }
 
     /**
@@ -669,14 +677,13 @@ abstract class Feed
     *
     * @link http://www.phpwact.org/php/i18n/charsets#xml See utf8_for_xml() function
     * @link http://www.w3.org/TR/REC-xml/#charsets
-    * @link https://github.com/mibe/FeedWriter/issues/30
     *
     * @access   public
     * @param    string $string      string which should be filtered
     * @param    string $replacement replace invalid characters with this string
     * @return   string              the filtered string
     */
-    public static function filterInvalidXMLChars($string, $replacement = '_') // default to '\x{FFFD}' ???
+    public static function filterInvalidXMLChars($string, $replacement = '_') // default to '\x{FFFD}'
     {
         $result = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]+/u', $replacement, $string);
 
@@ -691,9 +698,6 @@ abstract class Feed
 
         return $result;
     }
-    // End # public functions ----------------------------------------------
-
-    // Start # private functions ----------------------------------------------
 
     /**
     * Returns all used XML namespace prefixes in this instance.
@@ -908,7 +912,7 @@ abstract class Feed
             // An image has its own element after the channel elements.
             if (array_key_exists('image', $this->data))
                 $out .= $this->makeNode('image', $this->data['Image'], array('rdf:about' => $this->data['Image']['url']));
-        } else if ($this->version == Feed::ATOM) {
+        } else if ($this->version == Feed::ATOM && !array_key_exists('id', $this->channels)) {
             // ATOM feeds have a unique feed ID. Use the title channel element as key.
             $out .= $this->makeNode('id', Feed::uuid($this->channels['title']['content'], 'urn:uuid:'));
         }
@@ -1011,7 +1015,4 @@ abstract class Feed
 
         return $text;
     }
-
-    // End # private functions ----------------------------------------------
-
-} // end of class Feed
+}

@@ -76,6 +76,9 @@ abstract class Feed
     */
     private $version       = null;
 
+	/**
+	* Lang attribute for Atom
+	*/
     private $lang = null;
 
     /**

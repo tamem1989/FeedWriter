@@ -76,6 +76,8 @@ abstract class Feed
     */
     private $version       = null;
 
+    private $lang = null;
+
     /**
      * Constructor
      *
@@ -155,6 +157,29 @@ abstract class Feed
             throw new InvalidOperationException('The generator element is not supported in RSS1 feeds.');
 
         return $this;
+    }
+
+    /**
+     * Add language to Feed attribute
+     *
+     * @param $lang
+     * https://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
+     */
+    public function addLang($lang)
+    {
+        $validLang = [
+            'af', 'sq', 'eu', 'be', 'bg', 'ca', 'zh-cn', 'zh-tw', 'hr', 'cs', 'da', 'nl', 'nl-be', 'nl-nl', 'en',
+            'en-au', 'en-bz', 'en-ca', 'en-ie', 'en-jm', 'en-nz', 'en-ph', 'en-za', 'en-tt', 'en-gb', 'en-us', 'en-zw',
+            'et', 'fo', 'fi', 'fr', 'fr-be', 'fr-ca', 'fr-fr', 'fr-lu', 'fr-mc', 'fr-ch', 'gl', 'gd', 'de', 'de-at',
+            'de-de', 'de-li', 'de-lu', 'de-ch', 'el', 'haw', 'hu', 'is', 'in', 'ga', 'it', 'it-it', 'it-ch', 'ja', 'ko',
+            'mk', 'no', 'pl', 'pt', 'pt-br', 'pt-pt', 'ro', 'ro-mo', 'ro-ro', 'ru', 'ru-mo', 'ru-ru', 'sr', 'sk', 'sl',
+            'es', 'es-ar', 'es-bo', 'es-cl', 'es-co', 'es-cr', 'es-do', 'es-ec', 'es-sv', 'es-gt', 'es-hn', 'es-mx',
+            'es-ni', 'es-pa', 'es-py', 'es-pe', 'es-pr', 'es-es', 'es-uy', 'es-ve', 'sv', 'sv-fi', 'sv-se', 'tr', 'u'
+        ];
+
+        if (in_array(strtolower($lang), $validLang)) {
+            $this->lang = strtolower($lang);
+        }
     }
 
     /**
@@ -768,6 +793,10 @@ abstract class Feed
             $prefixes = array_flip($prefixes);
             unset($prefixes['atom']);
             $prefixes = array_flip($prefixes);
+
+            if ($this->lang) {
+                $attributes['xml:lang'] = $this->lang;
+            }
         }
 
         // Iterate through every namespace prefix and add it to the element attributes.
@@ -780,8 +809,9 @@ abstract class Feed
         }
 
         // Include default namepsace, if required
-        if (!empty($defaultNamespace))
+        if (!empty($defaultNamespace)) {
             $attributes['xmlns'] = $defaultNamespace;
+        }
 
         $out .= $this->makeNode($tagName, '', $attributes, true);
 

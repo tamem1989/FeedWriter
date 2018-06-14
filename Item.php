@@ -297,7 +297,7 @@ class Item
 
         // the length parameter should be set to 0 if it can't be determined
         // see http://www.rssboard.org/rss-profile#element-channel-item-enclosure
-        if (!is_numeric($length) || $length < 0)
+        if ($length && (!is_numeric($length) || $length < 0))
             throw new \InvalidArgumentException('The length parameter must be an integer and greater or equals to zero.');
 
         // Regex used from RFC 4287, page 41
